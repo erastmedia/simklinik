@@ -74,13 +74,14 @@
                     <table id="example" class="table table-bordered table-hover table-stripped table-sm text-sm data-table display" style="width:100%">
                       <thead>
                         <tr class="text-center bg-gradient-info">
-                          <th style="width: 15%;">CUSTOM NUMBER</th>
-                          <th style="width: 10%;">QTY</th>
+                          <th style="width: 12%;">CUSTOM NUMBER</th>
+                          <th style="width: 13%;">CUSTOMER NAME</th>
+                          <th style="width: 5%;">QTY</th>
                           <th style="width: 10%;">TYPE</th>
                           <th style="width: 10%;">ORDER DATE<br>(mm/dd/yy)</th>
                           <th style="width: 10%;">RECEIVE DATE<br>(mm/dd/yy)</th>
                           <th style="width: 10%;">STATUS</th>
-                          <th style="width: 35%;">NOTES</th>
+                          <th style="width: 30%;">NOTES</th>
                         </tr>
                       </thead>
                       <tbody id="examplebody">
@@ -176,25 +177,25 @@
                                              </div>
                                              <div class="col-sm-3">
                                                   <div class="custom-control custom-radio">
-                                                       <input class="custom-control-input" type="radio" id="customRadio1" value="Process" name="statusprod" checked>
+                                                       <input class="custom-control-input" type="radio" id="customRadio1" value="1" name="statusprod" checked>
                                                        <label for="customRadio1" class="custom-control-label">On Process</label>
                                                   </div>
                                              </div>
                                              <div class="col-sm-3">
                                                   <div class="custom-control custom-radio">
-                                                       <input class="custom-control-input" type="radio" id="customRadio2" value="Pending" name="statusprod">
+                                                       <input class="custom-control-input" type="radio" id="customRadio2" value="2" name="statusprod">
                                                        <label for="customRadio2" class="custom-control-label">Pending</label>
                                                   </div>
                                              </div>
                                              <div class="col-sm-3">
                                                 <div class="custom-control custom-radio">
-                                                    <input class="custom-control-input" type="radio" id="customRadio3" value="Shipped" name="statusprod">
+                                                    <input class="custom-control-input" type="radio" id="customRadio3" value="4" name="statusprod">
                                                     <label for="customRadio3" class="custom-control-label">Shipped</label>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <div class="custom-control custom-radio">
-                                                    <input class="custom-control-input" type="radio" id="customRadio4" value="Cancel" name="statusprod">
+                                                    <input class="custom-control-input" type="radio" id="customRadio4" value="3" name="statusprod">
                                                     <label for="customRadio4" class="custom-control-label">Cancel</label>
                                                 </div>
                                             </div>
@@ -571,7 +572,8 @@ channel.bind(
     if (statusValue===0 && kodeBuyerValue!='adm'){
         console.log("kdbuyerValue : " + kdbuyerValue);
         console.log("currentUser.kodebuyer : " + currentUser.kodebuyer);
-        loadComment(idmfreceive);
+        // loadComment(idmfreceive);
+        loadComment(idmfReceiveActive);
         initNotif();
         if (kdbuyerValue==currentUser.kodebuyer){
             $(document).Toasts('create', {
@@ -579,7 +581,7 @@ channel.bind(
                 delay: 30000,
                 autohide: true,
                 title: nameValue,
-                subtitle: 'New Message',
+                subtitle: '<i class="fas fa-envelope"></i>',
                 position: 'bottomRight',
                 body: notifValue
             });
@@ -587,14 +589,15 @@ channel.bind(
     };
     
     if (statusValue===1 && kodeBuyerValue=='adm'){
-        loadComment(idmfreceive);
+        // loadComment(idmfreceive);
+        loadComment(idmfReceiveActive);
         initNotif();
         $(document).Toasts('create', {
             class: 'bg-notif-msg m-4',
             delay: 30000,
             autohide: true,
             title: nameValue,
-            subtitle: 'New Message',
+            subtitle: '<i class="fas fa-envelope"></i>',
             position: 'bottomRight',
             body: notifValue
         });
@@ -602,7 +605,8 @@ channel.bind(
 });
 
 channel_delete.bind('event-delete', function(data) {
-    loadComment(idmfreceive);
+    // loadComment(idmfreceive);
+    loadCommentAfterDelete(idmfReceiveActive);
     initNotif();
 });
 
@@ -655,8 +659,9 @@ function loadCommentAfterDelete(idmfreceive){
             type: 'GET',
             dataType: 'html',
             success: function(response) {
-                toastr["success"]("Komentar telah dihapus.", "Berhasil");
+                // toastr["success"]("Komentar telah dihapus.", "Berhasil");
                 $('#comments-container').html(response);
+                $('#comments-container').animate({ scrollTop: $('#comments-container')[0].scrollHeight }, 1000);
             }
         });
 }
@@ -794,10 +799,13 @@ $("#btnSearch").click(function(event){
 
 $("#btnShowAll").click(function(event){
     event.preventDefault();
-    if(kodebuyer==''){
-        toastr["error"]("You have not specified Buyer data as a filter.", "Invalid Data Filter");
-        return false;
+    if (currentUser.kodebuyer=='adm'){
+        if(kodebuyer==''){
+            toastr["error"]("You have not specified Buyer data as a filter.", "Invalid Data Filter");
+            return false;
+        }
     }
+    
     kodebuyerdetail = kodebuyer;
     if (currentUser.kodebuyer=='adm'){
         $('#kodebuyer_com').val(kodebuyerdetail);
@@ -832,6 +840,7 @@ function loadComment(idmfreceive){
             dataType: 'html',
             success: function(response) {
                 $('#comments-container').html(response);
+                $('#comments-container').animate({ scrollTop: $('#comments-container')[0].scrollHeight }, 1000);
             }
         });
 }
@@ -1147,6 +1156,7 @@ function createChild ( row ) {
     
     $('#saveBtn').click(function (e) {
         e.preventDefault();
+        $('#kodebuyer_com').val(kodebuyerdetail);
         $(this).prop('disabled', true).html('<span class="spinner-grow spinner-grow-sm mr-3" role="status" aria-hidden="true"></span>Sending...');
     
         var formData = new FormData($('#commentForm')[0]);
@@ -1375,13 +1385,14 @@ function searchData(nomororder, kodebuyer){
       bFilter: false,
       info: false,
       columnDefs: [
-        { width: '15%', targets: 0 },
-        { width: '10%', targets: 1 },
-        { width: '10%', targets: 2 },
+        { width: '12%', targets: 0 },
+        { width: '13%', targets: 1 },
+        { width: '5%', targets: 2 },
         { width: '10%', targets: 3 },
         { width: '10%', targets: 4 },
         { width: '10%', targets: 5 },
-        { width: '35%', targets: 6 },
+        { width: '10%', targets: 6 },
+        { width: '30%', targets: 7 },
       ],
       fixedColumns: true,
       bLengthChange: false,
@@ -1416,25 +1427,25 @@ function searchData(nomororder, kodebuyer){
                 }
             }
         },
+          {data: 'customer_name', name: 'datawebreceive.customer_name', className: "text-center details-control"},
           {data: 'qty', name: 'datawebreceive.qty', render: $.fn.dataTable.render.number('.', ',', 0, ''), className: "text-right details-control"},
           {data: 'namaorder', name: 'datawebreceive.namaorder', className: "text-center details-control"},
           {data: 'tglorder', name: 'datawebreceive.tglorder', render: $.fn.dataTable.render.moment('MM/DD/YY'), className: "text-center details-control"},
           {data: 'tglmasuk', name: 'datawebreceive.tglmasuk', render: $.fn.dataTable.render.moment('MM/DD/YY'), className: "text-center details-control"},
         {
-            data: 'statusbynumber',
-            name: 'datawebreceive.statusbynumber',
+            data: 'status',
+            name: 'datawebreceive.status',
             className: "text-center details-control",
             searchable: false,
             render: function(data, type, full, meta) {
-                data = data.toUpperCase();
-                if (data === 'SHIPPED') {
-                    return '<span class="badge bg-success pt-1 pb-1 pl-2 pr-2">' + data + '<i class="fas fa-truck ml-1"></i></span>';
-                } else if (data === 'PROCESS') {
-                    return '<span class="badge bg-primary pt-1 pb-1 pl-2 pr-2">' + data + '<i class="fas fa-cogs ml-1"></i></span>';
-                } else if (data === 'PENDING') {
-                    return '<span class="badge bg-secondary pt-1 pb-1 pl-2 pr-2">' + data + '<i class="fas fa-hourglass-half ml-1"></i></span>';
-                } else if (data === 'CANCEL') {
-                    return '<span class="badge bg-danger pt-1 pb-1 pl-2 pr-2">' + data + '<i class="fas fa-ban ml-1"></i></span>';
+                if (data == 4) {
+                    return '<span class="badge bg-success pt-1 pb-1 pl-2 pr-2">SHIPPED<i class="fas fa-truck ml-1"></i></span>';
+                } else if (data == 1) {
+                    return '<span class="badge bg-primary pt-1 pb-1 pl-2 pr-2">PROCESS<i class="fas fa-cogs ml-1"></i></span>';
+                } else if (data == 2) {
+                    return '<span class="badge bg-secondary pt-1 pb-1 pl-2 pr-2">PENDING<i class="fas fa-hourglass-half ml-1"></i></span>';
+                } else if (data == 3) {
+                    return '<span class="badge bg-danger pt-1 pb-1 pl-2 pr-2">CANCEL<i class="fas fa-ban ml-1"></i></span>';
                 } else {
                     return data;
                 }
@@ -1459,13 +1470,14 @@ function filterAll(stat_prod){
       bFilter: false,
       info: false,
       columnDefs: [
-        { width: '15%', targets: 0 },
-        { width: '10%', targets: 1 },
-        { width: '10%', targets: 2 },
+        { width: '12%', targets: 0 },
+        { width: '13%', targets: 1 },
+        { width: '5%', targets: 2 },
         { width: '10%', targets: 3 },
         { width: '10%', targets: 4 },
         { width: '10%', targets: 5 },
-        { width: '35%', targets: 6 },
+        { width: '10%', targets: 6 },
+        { width: '30%', targets: 7 },
       ],
       fixedColumns: true,
       bLengthChange: false,
@@ -1500,25 +1512,25 @@ function filterAll(stat_prod){
                 }
             }
         },
+        {data: 'customer_name', name: 'datawebreceive.customer_name', className: "text-center details-control"},
           {data: 'qty', name: 'datawebreceive.qty', render: $.fn.dataTable.render.number('.', ',', 0, ''), className: "text-right details-control"},
           {data: 'namaorder', name: 'datawebreceive.namaorder', className: "text-center details-control"},
           {data: 'tglorder', name: 'datawebreceive.tglorder', render: $.fn.dataTable.render.moment('MM/DD/YY'), className: "text-center details-control"},
           {data: 'tglmasuk', name: 'datawebreceive.tglmasuk', render: $.fn.dataTable.render.moment('MM/DD/YY'), className: "text-center details-control"},
         {
-            data: 'statusbynumber',
-            name: 'datawebreceive.statusbynumber',
+            data: 'status',
+            name: 'datawebreceive.status',
             className: "text-center details-control",
             searchable: false,
             render: function(data, type, full, meta) {
-                data = data.toUpperCase();
-                if (data === 'SHIPPED') {
-                    return '<span class="badge bg-success pt-1 pb-1 pl-2 pr-2">' + data + '<i class="fas fa-truck ml-1"></i></span>';
-                } else if (data === 'PROCESS') {
-                    return '<span class="badge bg-primary pt-1 pb-1 pl-2 pr-2">' + data + '<i class="fas fa-cogs ml-1"></i></span>';
-                } else if (data === 'PENDING') {
-                    return '<span class="badge bg-secondary pt-1 pb-1 pl-2 pr-2">' + data + '<i class="fas fa-hourglass-half ml-1"></i></span>';
-                } else if (data === 'CANCEL') {
-                    return '<span class="badge bg-danger pt-1 pb-1 pl-2 pr-2">' + data + '<i class="fas fa-ban ml-1"></i></span>';
+                if (data == 4) {
+                    return '<span class="badge bg-success pt-1 pb-1 pl-2 pr-2">SHIPPED<i class="fas fa-truck ml-1"></i></span>';
+                } else if (data == 1) {
+                    return '<span class="badge bg-primary pt-1 pb-1 pl-2 pr-2">PROCESS<i class="fas fa-cogs ml-1"></i></span>';
+                } else if (data == 2) {
+                    return '<span class="badge bg-secondary pt-1 pb-1 pl-2 pr-2">PENDING<i class="fas fa-hourglass-half ml-1"></i></span>';
+                } else if (data == 3) {
+                    return '<span class="badge bg-danger pt-1 pb-1 pl-2 pr-2">CANCEL<i class="fas fa-ban ml-1"></i></span>';
                 } else {
                     return data;
                 }
@@ -1543,13 +1555,14 @@ function filterByDate(tglawalform, tglakhirform){
       bFilter: false,
       info: false,
       columnDefs: [
-        { width: '15%', targets: 0 },
-        { width: '10%', targets: 1 },
-        { width: '10%', targets: 2 },
+        { width: '12%', targets: 0 },
+        { width: '13%', targets: 1 },
+        { width: '5%', targets: 2 },
         { width: '10%', targets: 3 },
         { width: '10%', targets: 4 },
         { width: '10%', targets: 5 },
-        { width: '35%', targets: 6 },
+        { width: '10%', targets: 6 },
+        { width: '30%', targets: 7 },
       ],
       fixedColumns: true,
       bLengthChange: false,
@@ -1585,25 +1598,25 @@ function filterByDate(tglawalform, tglakhirform){
                 }
             }
         },
+        {data: 'customer_name', name: 'datawebreceive.customer_name', className: "text-center details-control"},
           {data: 'qty', name: 'datawebreceive.qty', render: $.fn.dataTable.render.number('.', ',', 0, ''), className: "text-right details-control"},
           {data: 'namaorder', name: 'datawebreceive.namaorder', className: "text-center details-control"},
           {data: 'tglorder', name: 'datawebreceive.tglorder', render: $.fn.dataTable.render.moment('MM/DD/YY'), className: "text-center details-control"},
           {data: 'tglmasuk', name: 'datawebreceive.tglmasuk', render: $.fn.dataTable.render.moment('MM/DD/YY'), className: "text-center details-control"},
         {
-            data: 'statusbynumber',
-            name: 'datawebreceive.statusbynumber',
+            data: 'status',
+            name: 'datawebreceive.status',
             className: "text-center details-control",
             searchable: false,
             render: function(data, type, full, meta) {
-                data = data.toUpperCase();
-                if (data === 'SHIPPED') {
-                    return '<span class="badge bg-success pt-1 pb-1 pl-2 pr-2">' + data + '<i class="fas fa-truck ml-1"></i></span>';
-                } else if (data === 'PROCESS') {
-                    return '<span class="badge bg-primary pt-1 pb-1 pl-2 pr-2">' + data + '<i class="fas fa-cogs ml-1"></i></span>';
-                } else if (data === 'PENDING') {
-                    return '<span class="badge bg-secondary pt-1 pb-1 pl-2 pr-2">' + data + '<i class="fas fa-hourglass-half ml-1"></i></span>';
-                } else if (data === 'CANCEL') {
-                    return '<span class="badge bg-danger pt-1 pb-1 pl-2 pr-2">' + data + '<i class="fas fa-ban ml-1"></i></span>';
+                if (data == 4) {
+                    return '<span class="badge bg-success pt-1 pb-1 pl-2 pr-2">SHIPPED<i class="fas fa-truck ml-1"></i></span>';
+                } else if (data == 1) {
+                    return '<span class="badge bg-primary pt-1 pb-1 pl-2 pr-2">PROCESS<i class="fas fa-cogs ml-1"></i></span>';
+                } else if (data == 2) {
+                    return '<span class="badge bg-secondary pt-1 pb-1 pl-2 pr-2">PENDING<i class="fas fa-hourglass-half ml-1"></i></span>';
+                } else if (data == 3) {
+                    return '<span class="badge bg-danger pt-1 pb-1 pl-2 pr-2">CANCEL<i class="fas fa-ban ml-1"></i></span>';
                 } else {
                     return data;
                 }
@@ -1629,14 +1642,15 @@ function showEmptyList(stat_prod){
             bFilter: false,
             info: false,
             columnDefs: [
-                { width: '15%', targets: 0 },
-                { width: '10%', targets: 1 },
-                { width: '10%', targets: 2 },
+                { width: '12%', targets: 0 },
+                { width: '13%', targets: 1 },
+                { width: '5%', targets: 2 },
                 { width: '10%', targets: 3 },
                 { width: '10%', targets: 4 },
                 { width: '10%', targets: 5 },
-                { width: '35%', targets: 6 },
-            ],
+                { width: '10%', targets: 6 },
+                { width: '30%', targets: 7 },
+              ],
             fixedColumns: true,
             bLengthChange: false,
             lengthMenu: [
@@ -1649,11 +1663,12 @@ function showEmptyList(stat_prod){
                 },
             columns: [
                 {data: 'nomororder', name: 'nomororder', className: "text-center"},
+                {data: 'customer_name', name: 'customer_name', className: "text-center"},
                 {data: 'qty', name: 'qty', className: "text-right"},
                 {data: 'namaorder', name: 'namaorder', className: "text-center"},
                 {data: 'tglorder', name: 'tglorder', className: "text-center"},
                 {data: 'tglmasuk', name: 'tglmasuk', className: "text-center"},
-                {data: 'statusbynumber', name: 'statusbynumber', className: "text-center"},
+                {data: 'status', name: 'status', className: "text-center"},
                 {data: 'notes', name: 'notes', className: "text-left"},
             ]
         });
@@ -1680,4 +1695,4 @@ toastr.options = {
 }
 </script>
 
-@stop
+@stop 
