@@ -18628,56 +18628,7 @@ class DiagnosaController extends Controller
 
         return view('pelayanan-klinik.diagnosa.index', compact('idklinik'));
     }
-
-    // public function loadProduksi(Request $request)
-    // {
-    //     $this->middleware('auth');
-        
-    //     if ($request->ajax()) {
-            
-    //         if (Auth::user()->kodebuyer=='adm') {
-                
-    //             $data = Produksi::join('mfjenisorder', 'mfjenisorder.kode', '=', 'datawebproduksi.kodeorder')
-    //             ->select(['datawebproduksi.*', 'mfjenisorder.jenis'])
-    //             ->where('datawebproduksi.nomororder', '=', $request->nomororderdetail)
-    //             ->where('datawebproduksi.kodebuyer', '=', $request->kodebuyerdetail)
-    //             ->orderBy('datawebproduksi.kodeitem', 'asc');
-                
-    //             return Datatables::of($data)
-    //                 ->addIndexColumn()
-    //                 ->addColumn('action', function($row){
-     
-    //                     $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-xs">Detail'. $row->kodeitem.'</a>';
-   
-    //                         return $btn;
-    //                 })
-    //                 ->rawColumns(['action', 'hair', 'base', 'venting', 'final'])
-    //                 ->make(true);
-                    
-    //         } else {
-                
-    //             $data = Produksi::join('mfjenisorder', 'mfjenisorder.kode', '=', 'datawebproduksi.kodeorder')
-    //             ->select(['datawebproduksi.*', 'mfjenisorder.jenis'])
-    //             ->where('datawebproduksi.nomororder', '=', $request->nomororderdetail)
-    //             ->where('datawebproduksi.kodebuyer', '=', Auth::user()->kodebuyer)
-    //             ->orderBy('datawebproduksi.kodeitem', 'asc');
-                
-    //             return Datatables::of($data)
-    //                 ->addIndexColumn()
-    //                 ->addColumn('action', function($row){
-     
-    //                     $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-xs">Detail'. $row->kodeitem.'</a>';
-    //                         return $btn;
-    //                 })
-    //                 ->rawColumns(['action', 'hair', 'base', 'venting', 'final'])
-    //                 ->make(true);
-    //         }
-    //     }
-    //     return response()->json([
-    //         'success' => 'yes',
-    //     ]);
-    // }
-
+    
     public function detail(Request $request)
     {        
         if ($request->ajax()) {
@@ -18711,9 +18662,18 @@ class DiagnosaController extends Controller
     public function store(Request $request)
     {
         $idklinik = auth()->user()->id_klinik;
+        $kode = $request->kode;
         $nama_en = $request->nama_en;
 
         $validator = Validator::make($request->all(), [
+            'kode' => [
+                'required',
+                'max:11',
+                Rule::unique('diagnosa')->where(function ($query) use ($idklinik, $kode) {
+                    return $query->where('id_klinik', $idklinik)
+                                 ->where('kode', $kode);
+                }),
+            ],
             'nama_en' => [
                 'required',
                 'max:255',
@@ -18725,6 +18685,9 @@ class DiagnosaController extends Controller
             'nama_id' => 'nullable|max:255',
         ], 
         [
+            'kode.required' => 'Kode Diagnosa harus diisi.',
+            'kode.unique' => 'Kode Diagnosa sudah digunakan.',
+            'kode.max' => 'Maksimal jumlah karakter untuk Kode Diagnosa adalah 11 digit.',
             'nama_en.required' => 'Nama Diagnosa (EN) harus diisi.',
             'nama_en.unique' => 'Nama Diagnosa (EN) sudah digunakan.',
             'nama_en.max' => 'Maksimal jumlah karakter untuk Nama Diagnosa (EN) adalah 255 digit.',
@@ -18739,13 +18702,16 @@ class DiagnosaController extends Controller
 
         try {
             $diagnosa = new Diagnosa();
+            $diagnosa->kode = $kode;
             $diagnosa->id_klinik = $idklinik;
             $diagnosa->nama_en = $request->nama_en;
             $diagnosa->nama_id = $request->nama_id;
             $diagnosa->status_aktif = $request->status_aktif;
             $diagnosa->save();
 
-            return response()->json(['success' => 'Data baru berhasil disimpan.']);
+            return response()->json([
+                'success' => 'Data baru berhasil disimpan.',
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => [$e->getMessage()] 
@@ -18757,10 +18723,35 @@ class DiagnosaController extends Controller
     {
         $diagnosa = Diagnosa::findOrFail($id);
         $idklinik = auth()->user()->id_klinik;
+        $kodeLama = $diagnosa->kode;
+        $kodeBaru = $request->kode;
         $namaLama = $diagnosa->nama_en;
         $namaBaru = $request->nama_en;
         $namaLamaUpper = strtoupper($namaLama);
         $namaBaruUpper = strtoupper($namaBaru);
+
+        if ($kodeLama != $kodeBaru) {
+            $validasiKode = Validator::make($request->all(), [
+                'kode' => [
+                    'required',
+                    'max:11',
+                    Rule::unique('diagnosa')->where(function ($query) use ($idklinik, $kodeBaru) {
+                        return $query->where('id_klinik', $idklinik)
+                                     ->where('kode', $kodeBaru);
+                    }),
+                ],
+            ], [
+                'kode.required' => 'Kode Diagnosa (EN) harus diisi.',
+                'kode.unique' => 'Kode Diagnosa (EN) sudah digunakan.',
+                'kode.max' => 'Maksimal jumlah karakter untuk Kode Diagnosa adalah 11 digit.',
+            ]);
+
+            if ($validasiKode->fails()) {
+                return response()->json([
+                    'error' => $validasiKode->errors()->all()
+                ], 422);
+            }
+        }
 
         if ($namaLamaUpper != $namaBaruUpper) {
             $validasiNama = Validator::make($request->all(), [
@@ -18787,6 +18778,7 @@ class DiagnosaController extends Controller
             }
         }
 
+        $diagnosa->kode = $kodeBaru;
         $diagnosa->nama_en = $namaBaru;
         $diagnosa->nama_id = $request->nama_id;
         $diagnosa->status_aktif = $request->status_aktif;

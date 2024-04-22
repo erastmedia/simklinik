@@ -16,7 +16,7 @@
                         <div class="form-group row mb-1">
                             <label for="kode" class="col-sm-4 col-form-label text-sm pr-0">Kode <span class="float-sm-right">:</span></label>
                             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-5">
-                                <input type="text" class="form-control form-control-sm" id="kode" name="kode" placeholder="Auto" tabindex="0" readonly>
+                                <input type="text" class="form-control form-control-sm" id="kode" name="kode" placeholder="Auto" tabindex="0">
                             </div>
                         </div>
                         <div class="form-group row mb-1">

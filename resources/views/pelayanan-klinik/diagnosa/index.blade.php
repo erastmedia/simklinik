@@ -219,7 +219,7 @@ $(function() {
             {
                 data: 'kode',
                 name: 'diagnosa.kode',
-                class: 'pl-2 pr-2 details-control',
+                class: 'pl-2 pr-2 details-control kode',
             },
             {
                 data: 'nama_en',
@@ -253,6 +253,7 @@ $(function() {
         $('#saveDiagnosa').prop('disabled', true).html('<span class="spinner-grow spinner-grow-sm mr-3" role="status" aria-hidden="true"></span>Sending...');
         $('#resetDiagnosa').prop('disabled', true);
         var formData = new FormData($('#addDataDiagnosa form')[0]);
+        var kode = $('#kode').val();
         var nama_en = $('#nama_en').val();
         var nama_id = $('#nama_id').val();
         var status_aktif = $('#status_aktif').val();
@@ -273,11 +274,26 @@ $(function() {
                 $('#saveDiagnosa').prop('disabled', false).html('<i class="fas fa-save text-success mr-2"></i>Simpan Data');
                 $('#resetDiagnosa').prop('disabled', false);
                 toastr["success"](response.success, "Data Tersimpan");
-                var $row = $('#table-diagnosa').find('[data-id="' + idDiagnosa + '"]').closest('tr');
-                $row.find('.nama_en').text(nama_en);
-                $row.find('.nama_id').text(nama_id);
-                $row.find('.status_aktif').html(statusAktifRendered);
-                $('#addDataDiagnosa').modal('hide');
+
+                if(strProses=='edit'){
+                    var $row = $('#table-diagnosa').find('[data-id="' + idDiagnosa + '"]').closest('tr');
+                    var $rowDetail = $('#tableprogress').find('[data-id="' + idDiagnosa + '"]').closest('tr');
+                    $row.find('.kode').text(kode);
+                    $rowDetail.find('.kode').text(kode);
+                    $row.find('.nama_en').text(nama_en);
+                    $rowDetail.find('.nama_en').text(nama_en);
+                    $row.find('.nama_id').text(nama_id);
+                    $rowDetail.find('.nama_id').text(nama_id);
+                    $row.find('.status_aktif').html(statusAktifRendered);
+                    $rowDetail.find('.status_aktif').html(statusAktifRendered);
+                    $('#addDataDiagnosa').modal('hide');
+                }
+
+                if(strProses=='add'){
+                    $('#addDataDiagnosa').modal('hide');
+                    tableDiagnosa.ajax.reload();
+                    tableDiagnosa.columns.adjust().draw();
+                }
             },
             error: function(error) {
                 $('#saveDiagnosa').prop('disabled', false).html('<i class="fas fa-save text-success mr-2"></i>Simpan Data');
@@ -481,6 +497,9 @@ function createChild ( row ) {
                 kode_aktif:rowData.kode,
             },
         },
+        rowCallback: function(row, data) {
+            $(row).attr('data-id', data.id);
+        },
         columns: [
             {
                 data: 'action',
@@ -492,22 +511,22 @@ function createChild ( row ) {
             {
                 data: 'kode',
                 name: 'diagnosa.kode',
-                class: 'pl-2 pr-2',
+                class: 'pl-2 pr-2 kode',
             },
             {
                 data: 'nama_en',
                 name: 'diagnosa.nama_en',
-                class: 'pl-2 pr-2',
+                class: 'pl-2 pr-2 nama_en',
             },
             {
                 data: 'nama_id',
                 name: 'diagnosa.nama_id',
-                class: 'pl-2 pr-2',
+                class: 'pl-2 pr-2 nama_id',
             },
             {
                 data: 'status_aktif',
                 name: 'diagnosa.status_aktif',
-                className: 'text-center',
+                className: 'text-center status_aktif',
                 render: function(data, type, full, meta) {
                     if (data == 1) {
                         return '<span class="badge bg-success pt-1 pb-1 pl-2 pr-2">AKTIF</span>';
