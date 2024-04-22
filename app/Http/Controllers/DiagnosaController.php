@@ -18629,6 +18629,85 @@ class DiagnosaController extends Controller
         return view('pelayanan-klinik.diagnosa.index', compact('idklinik'));
     }
 
+    // public function loadProduksi(Request $request)
+    // {
+    //     $this->middleware('auth');
+        
+    //     if ($request->ajax()) {
+            
+    //         if (Auth::user()->kodebuyer=='adm') {
+                
+    //             $data = Produksi::join('mfjenisorder', 'mfjenisorder.kode', '=', 'datawebproduksi.kodeorder')
+    //             ->select(['datawebproduksi.*', 'mfjenisorder.jenis'])
+    //             ->where('datawebproduksi.nomororder', '=', $request->nomororderdetail)
+    //             ->where('datawebproduksi.kodebuyer', '=', $request->kodebuyerdetail)
+    //             ->orderBy('datawebproduksi.kodeitem', 'asc');
+                
+    //             return Datatables::of($data)
+    //                 ->addIndexColumn()
+    //                 ->addColumn('action', function($row){
+     
+    //                     $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-xs">Detail'. $row->kodeitem.'</a>';
+   
+    //                         return $btn;
+    //                 })
+    //                 ->rawColumns(['action', 'hair', 'base', 'venting', 'final'])
+    //                 ->make(true);
+                    
+    //         } else {
+                
+    //             $data = Produksi::join('mfjenisorder', 'mfjenisorder.kode', '=', 'datawebproduksi.kodeorder')
+    //             ->select(['datawebproduksi.*', 'mfjenisorder.jenis'])
+    //             ->where('datawebproduksi.nomororder', '=', $request->nomororderdetail)
+    //             ->where('datawebproduksi.kodebuyer', '=', Auth::user()->kodebuyer)
+    //             ->orderBy('datawebproduksi.kodeitem', 'asc');
+                
+    //             return Datatables::of($data)
+    //                 ->addIndexColumn()
+    //                 ->addColumn('action', function($row){
+     
+    //                     $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-xs">Detail'. $row->kodeitem.'</a>';
+    //                         return $btn;
+    //                 })
+    //                 ->rawColumns(['action', 'hair', 'base', 'venting', 'final'])
+    //                 ->make(true);
+    //         }
+    //     }
+    //     return response()->json([
+    //         'success' => 'yes',
+    //     ]);
+    // }
+
+    public function detail(Request $request)
+    {        
+        if ($request->ajax()) {
+            $idklinik = auth()->user()->id_klinik;
+            $diagnosa = Diagnosa::where('diagnosa.id_klinik', $idklinik)
+                ->where('as_head', 0)
+                ->whereRaw('LEFT(diagnosa.kode, 3) = ?', $request->kode_aktif)
+                ->orderBy('diagnosa.id', 'asc')
+                ->get();
+            
+            return Datatables::of($diagnosa)
+                ->addIndexColumn()
+                ->addColumn('action', function($diagnosa){
+                    return '
+                    <div class="action-buttons">
+                        <center>
+                            <button onClick="editFormDiagnosa(`'. route('diagnosa.update', $diagnosa->id) . '`)" class="btn btn-xs btn-default btn-rounded rounded-lg text-warning pl-2 pr-2" data-toggle="tooltip" title="Edit"><i class="fa fa-edit text-xs"></i></button>
+                            <button onClick="deleteDataDiagnosa(`'. route('diagnosa.update', $diagnosa->id) . '`)" class="btn btn-xs btn-default btn-rounded rounded-lg text-danger pl-2 pr-2" data-toggle="tooltip" title="Delete"><i class="fa fa-trash text-xs"></i></button>
+                        </center>
+                    </div>
+                    ';
+                })
+                ->rawColumns(['status_aktif', 'action'])
+                ->make(true);
+        }
+        return response()->json([
+            'success' => 'yes',
+        ]);
+    }
+
     public function store(Request $request)
     {
         $idklinik = auth()->user()->id_klinik;

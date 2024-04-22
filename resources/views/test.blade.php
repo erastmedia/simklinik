@@ -1199,7 +1199,7 @@ function createChild ( row ) {
             data: {
                 nomororderdetail:rowData.nomororder,
                 kodebuyerdetail:kodebuyer,
-             },
+            },
         },
         columnDefs: [
             { width: 150, targets: 0 },

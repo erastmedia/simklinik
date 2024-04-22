@@ -197,6 +197,7 @@ Route::get('readSipaFiles/{id?}', [KlinikController::class, 'readSipaFiles'])->n
     //ROUTES UNTUK DATA DIAGNOSA
     Route::get('dashboard/pelayanan-klinik/diagnosa', [DiagnosaController::class, 'index'])->name('diagnosa.index');
     Route::get('dashboard/pelayanan-klinik/diagnosa/data', [DiagnosaController::class, 'data'])->name('diagnosa.data');
+    Route::get('dashboard/pelayanan-klinik/diagnosa/detail', [DiagnosaController::class, 'detail'])->name('diagnosa.detail');
     Route::post('dashboard/pelayanan-klinik/diagnosa/store', [DiagnosaController::class, 'store'])->name('diagnosa.store');
     Route::get('dashboard/pelayanan-klinik/diagnosa/{id}/edit', [DiagnosaController::class, 'edit'])->name('diagnosa.edit');
     Route::put('dashboard/pelayanan-klinik/diagnosa/{id}', [DiagnosaController::class, 'update'])->name('diagnosa.update');

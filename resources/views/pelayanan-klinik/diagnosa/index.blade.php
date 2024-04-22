@@ -198,13 +198,16 @@ $(function() {
             url: "{{ route('diagnosa.data') }}",
             dataSrc: "data",
         },
+        rowCallback: function(row, data) {
+            $(row).attr('data-id', data.id);
+        },
         columns: [
             {
                 data: 'DT_RowIndex',
                 name: 'DT_RowIndex',
                 orderable: false,
                 searchable: false,
-                className: 'text-center',
+                className: 'text-center details-control',
             },
             {
                 data: 'action',
@@ -216,22 +219,22 @@ $(function() {
             {
                 data: 'kode',
                 name: 'diagnosa.kode',
-                class: 'pl-2 pr-2',
+                class: 'pl-2 pr-2 details-control',
             },
             {
                 data: 'nama_en',
                 name: 'diagnosa.nama_en',
-                class: 'pl-2 pr-2',
+                class: 'pl-2 pr-2 details-control nama_en',
             },
             {
                 data: 'nama_id',
                 name: 'diagnosa.nama_id',
-                class: 'pl-2 pr-2',
+                class: 'pl-2 pr-2 details-control nama_id',
             },
             {
                 data: 'status_aktif',
                 name: 'diagnosa.status_aktif',
-                className: 'text-center',
+                className: 'text-center details-control status_aktif',
                 render: function(data, type, full, meta) {
                     if (data == 1) {
                         return '<span class="badge bg-success pt-1 pb-1 pl-2 pr-2">AKTIF</span>';
@@ -250,6 +253,15 @@ $(function() {
         $('#saveDiagnosa').prop('disabled', true).html('<span class="spinner-grow spinner-grow-sm mr-3" role="status" aria-hidden="true"></span>Sending...');
         $('#resetDiagnosa').prop('disabled', true);
         var formData = new FormData($('#addDataDiagnosa form')[0]);
+        var nama_en = $('#nama_en').val();
+        var nama_id = $('#nama_id').val();
+        var status_aktif = $('#status_aktif').val();
+        var statusAktifRendered = '';
+        if (status_aktif == 1){
+            statusAktifRendered = '<span class="badge bg-success pt-1 pb-1 pl-2 pr-2">AKTIF</span>';
+        } else {
+            statusAktifRendered = '<span class="badge bg-danger pt-1 pb-1 pl-2 pr-2">NON AKTIF</span>';
+        }
 
         $.ajax({
             url: $('#addDataDiagnosa form').attr('action'),
@@ -261,9 +273,11 @@ $(function() {
                 $('#saveDiagnosa').prop('disabled', false).html('<i class="fas fa-save text-success mr-2"></i>Simpan Data');
                 $('#resetDiagnosa').prop('disabled', false);
                 toastr["success"](response.success, "Data Tersimpan");
+                var $row = $('#table-diagnosa').find('[data-id="' + idDiagnosa + '"]').closest('tr');
+                $row.find('.nama_en').text(nama_en);
+                $row.find('.nama_id').text(nama_id);
+                $row.find('.status_aktif').html(statusAktifRendered);
                 $('#addDataDiagnosa').modal('hide');
-                tableDiagnosa.ajax.reload();
-                tableDiagnosa.columns.adjust().draw();
             },
             error: function(error) {
                 $('#saveDiagnosa').prop('disabled', false).html('<i class="fas fa-save text-success mr-2"></i>Simpan Data');
@@ -281,7 +295,6 @@ $(function() {
 });
 
 // FORM MODAL TIPE LOKASI POLI
-
 function addFormDiagnosa(url) {
     $("#addDataDiagnosa").modal({ 
         backdrop: "static", 
@@ -316,6 +329,7 @@ function editFormDiagnosa(url) {
     $.get(url)
         .done((response) => {
             idDiagnosa = response.id;
+            console.log(idDiagnosa);
             $('#addDataDiagnosa [name=kode]').val(response.kode);
             $('#addDataDiagnosa [name=nama_en]').val(response.nama_en);
             $('#addDataDiagnosa [name=nama_id]').val(response.nama_id);
@@ -387,6 +401,130 @@ function copyDiagnosaConfirm(url) {
             });
         }
     });
+}
+
+var openedChildRow = null;
+
+$('#table-diagnosa tbody').on('click', 'td.details-control', function () {
+    $('#table-diagnosa tr').removeClass("table-primary");
+    var tr = $(this).closest('tr');
+    var row = tableDiagnosa.row( tr );
+    
+    if (openedChildRow !== null && openedChildRow[0] !== tr[0]) {
+        var openedRow = tableDiagnosa.row(openedChildRow);
+        destroyChild(openedRow);
+        openedChildRow.removeClass('shown');
+        console.log('Closed previously opened child row');
+    }
+ 
+    if (row.child.isShown()) {
+        tr.removeClass("table-primary");
+        destroyChild(row);
+        tr.removeClass('shown');
+        openedChildRow = null; 
+        console.log('Click on table opened tr');
+    } else {
+        tr.toggleClass("table-primary");
+        createChild(row);
+        tr.addClass('shown');
+        openedChildRow = tr; 
+        console.log('Click on table closed tr');
+    }
+});
+
+var kodeAktif = '';
+var idAktif = 0;
+function createChild ( row ) {
+    var rowData = row.data();
+    idAktif = rowData.id;
+    kodeAktif = rowData.kode;
+    console.log('Kode Diagnosa : ' + kodeAktif);
+    console.log('ID Diagnosa : ' + idAktif);
+    var detailTable = $('<table id="tblprogress" class="table table-bordered table-info table-hover table-sm text-sm data-table display" width="100%"/>');
+    var headerStructure = '<thead>' +
+        '<tr class="text-center bg-gradient-secondary">' +
+        '<th width="11%">Action</th>' +
+        '<th width="6%">Kode</th>' +
+        '<th width="38%">Nama Diagnosa (EN)</th>' +
+        '<th width="38%">Nama Diagnosa (ID)</th>' +
+        '<th width="7%">Status</th>' +
+        '</tr>' +
+        '</thead><tbody id="tblprogressbody"></tbody>';
+
+    detailTable.append(headerStructure);
+    // tabContentTabel.append(detailTable);
+    row.child( detailTable ).show();
+
+    row.child().addClass('child-row');
+
+    var usersTable = detailTable.DataTable({
+        processing: true,
+        serverSide: false,
+        pageLength: 100,
+        bLengthChange: false,
+        bPaginate: false,
+        bFilter: false,
+        paging: false,
+        info: false,
+        autoWidth: false,
+        columnDefs: [
+            { width: '11%', targets: 0 },
+            { width: '6%', targets: 1 },
+            { width: '38%', targets: 2 },
+            { width: '38%', targets: 3 },
+            { width: '7%', targets: 4 },
+        ],
+        ajax: {
+            url: "{{ route('diagnosa.detail') }}",
+            // dataSrc: "data",
+            data: {
+                kode_aktif:rowData.kode,
+            },
+        },
+        columns: [
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false,
+                className: 'text-center',
+            }, 
+            {
+                data: 'kode',
+                name: 'diagnosa.kode',
+                class: 'pl-2 pr-2',
+            },
+            {
+                data: 'nama_en',
+                name: 'diagnosa.nama_en',
+                class: 'pl-2 pr-2',
+            },
+            {
+                data: 'nama_id',
+                name: 'diagnosa.nama_id',
+                class: 'pl-2 pr-2',
+            },
+            {
+                data: 'status_aktif',
+                name: 'diagnosa.status_aktif',
+                className: 'text-center',
+                render: function(data, type, full, meta) {
+                    if (data == 1) {
+                        return '<span class="badge bg-success pt-1 pb-1 pl-2 pr-2">AKTIF</span>';
+                    } else if (data == 0) {
+                        return '<span class="badge bg-danger pt-1 pb-1 pl-2 pr-2">NON AKTIF</span>';
+                    }
+                }
+            },
+        ]
+    });
+}
+
+function destroyChild(row) {
+    var tableDetail = $("detailTable", row.child());
+    tableDetail.detach();
+    tableDetail.DataTable().destroy();
+    row.child.hide();
 }
 
 toastr.options = {
