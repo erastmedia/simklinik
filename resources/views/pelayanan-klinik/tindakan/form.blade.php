@@ -1,8 +1,8 @@
-<div class="modal fade" id="addDataDiagnosa">
+<div class="modal fade" id="addDataTindakan">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-gradient-info pl-3 pr-3 pt-2 pb-2">
-                <h6 class="modal-title text-bold m-0">Form Tambah Data Diagnosa</h6>
+                <h6 class="modal-title text-bold m-0">Form Tambah Data Tindakan</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -20,15 +20,15 @@
                             </div>
                         </div>
                         <div class="form-group row mb-1">
-                            <label for="nama_en" class="col-sm-4 col-form-label text-sm pr-0">Nama Diagnosa (EN) <span class="float-sm-right">:</span></label>
+                            <label for="nama_en" class="col-sm-4 col-form-label text-sm pr-0">Nama Tindakan (EN) <span class="float-sm-right">:</span></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control form-control-sm" id="nama_en" name="nama_en" placeholder="Nama Diagnosa (EN)" tabindex="0">
+                                <input type="text" class="form-control form-control-sm" id="nama_en" name="nama_en" placeholder="Nama Tindakan (EN)" tabindex="0">
                             </div>
                         </div>
                         <div class="form-group row mb-1">
-                            <label for="nama_id" class="col-sm-4 col-form-label text-sm pr-0">Nama Diagnosa (ID) <span class="float-sm-right">:</span></label>
+                            <label for="nama_id" class="col-sm-4 col-form-label text-sm pr-0">Nama Tindakan (ID) <span class="float-sm-right">:</span></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control form-control-sm" id="nama_id" name="nama_id" placeholder="Nama Diagnosa (ID)" tabindex="0">
+                                <input type="text" class="form-control form-control-sm" id="nama_id" name="nama_id" placeholder="Nama Tindakan (ID)" tabindex="0">
                             </div>
                         </div>
                         <div class="form-group row mb-1">
@@ -45,8 +45,8 @@
                 </div>
             </div>
             <div class="modal-footer pl-3 pr-3 pt-2 pb-2">
-                <button class="btn btn-default btn-md text-bold mr-1" type="reset" id="resetDiagnosa"><i class="fas fa-retweet text-primary mr-2"></i>Reset</button>
-                <button class="btn btn-default btn-md text-bold mr-1" type="submit" id="saveDiagnosa"><i class="fas fa-save text-success mr-2"></i>Simpan Data</button>
+                <button class="btn btn-default btn-md text-bold mr-1" type="reset" id="resetTindakan"><i class="fas fa-retweet text-primary mr-2"></i>Reset</button>
+                <button class="btn btn-default btn-md text-bold mr-1" type="submit" id="saveTindakan"><i class="fas fa-save text-success mr-2"></i>Simpan Data</button>
             </div>
             </form>
         </div>

@@ -20,6 +20,7 @@ use App\Http\Controllers\KategoriObatController;
 use App\Http\Controllers\LokasiObatController;
 use App\Http\Controllers\SatuanObatController;
 use App\Http\Controllers\DiagnosaController;
+use App\Http\Controllers\TindakanController;
 use App\Http\Controllers\MailNotifController;
 use App\Mail;
 
@@ -204,6 +205,16 @@ Route::get('readSipaFiles/{id?}', [KlinikController::class, 'readSipaFiles'])->n
     Route::get('dashboard/pelayanan-klinik/diagnosa/{id}', [DiagnosaController::class, 'show'])->name('diagnosa.show');
     Route::delete('dashboard/pelayanan-klinik/diagnosa/{id}', [DiagnosaController::class, 'destroy'])->name('diagnosa.destroy');
     Route::post('dashboard/pelayanan-klinik/diagnosa/copy-preset', [DiagnosaController::class, 'copyPreset'])->name('diagnosa.copypreset');
+
+    //ROUTES UNTUK DATA TINDAKAN
+    Route::get('dashboard/pelayanan-klinik/tindakan', [TindakanController::class, 'index'])->name('tindakan.index');
+    Route::get('dashboard/pelayanan-klinik/tindakan/data', [TindakanController::class, 'data'])->name('tindakan.data');
+    Route::post('dashboard/pelayanan-klinik/tindakan/store', [TindakanController::class, 'store'])->name('tindakan.store');
+    Route::get('dashboard/pelayanan-klinik/tindakan/{id}/edit', [TindakanController::class, 'edit'])->name('tindakan.edit');
+    Route::put('dashboard/pelayanan-klinik/tindakan/{id}', [TindakanController::class, 'update'])->name('tindakan.update');
+    Route::get('dashboard/pelayanan-klinik/tindakan/{id}', [TindakanController::class, 'show'])->name('tindakan.show');
+    Route::delete('dashboard/pelayanan-klinik/tindakan/{id}', [TindakanController::class, 'destroy'])->name('tindakan.destroy');
+    Route::post('dashboard/pelayanan-klinik/tindakan/copy-preset', [TindakanController::class, 'copyPreset'])->name('tindakan.copypreset');
 
     //ROUTES UNTUK NOTIFIKASI EMAIL
     //TEST

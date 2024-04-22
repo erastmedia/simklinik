@@ -527,7 +527,7 @@ return [
                     'text'  => 'Prosedur/Tindakan (ICD-9)',
                     'icon'  => 'fas fa-fw fa-diagnoses ml-1 mr-2',
                     'icon_color'  => 'primary',
-                    'url'   => '#',
+                    'url'   => 'dashboard/pelayanan-klinik/tindakan',
                     'shift' => 'ml-2',
                     'classes' => 'text-sm',
                 ],
