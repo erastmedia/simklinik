@@ -1,19 +1,19 @@
 @extends('adminlte::page')
 
-@section('title', 'Data Satuan Obat')
+@section('title', 'Data Jaminan')
 @section('plugins.Datatables', true)
 @section('plugins.Toastr', true)
 @section('plugins.Sweetalert2', true)
 @section('content_header')
     <div class="row mb-0">
         <div class="col-sm-6">
-            <h4 class="text-bold text-black">Data Satuan Obat</h4>
+            <h4 class="text-bold text-black">Data Jaminan</h4>
         </div>
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right text-xs">
                 <li class="breadcrumb-item"><a href="../../dashboard">Dashboard</a></li>
                 <li class="breadcrumb-item"><a href="../../dashboard">Master</a></li>
-                <li class="breadcrumb-item active">Data Satuan Obat</li>
+                <li class="breadcrumb-item active">Data Jaminan</li>
             </ol>
         </div>
     </div>
@@ -21,45 +21,46 @@
 @section('content')
     <div class="card card-danger card-outline card-outline-tabs">
         <div class="card-header p-0 border-bottom-0">
-            <ul class="nav nav-tabs" id="tabDataSatuan" role="tablist">
+            <ul class="nav nav-tabs" id="tabDataJaminan" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="tab-sat-obat" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true"><h6 class="text-bold m-0">Data Satuan Obat</h6></a>
+                    <a class="nav-link active" id="tab-jaminan" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true"><h6 class="text-bold m-0">Data Jaminan</h6></a>
                 </li>
             </ul>
         </div>
         <div class="card-body">
-            <div class="tab-content" id="tabDataSatuanContent">
-                <div class="tab-pane fade active show" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="tab-sat-obat">
+            <div class="tab-content" id="tabDataJaminanContent">
+                <div class="tab-pane fade active show" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="tab-jaminan">
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header p-1">
                                     <div class="row">
                                         <div class="col-md-12 input-group input-group-md">
-                                            <input type="text" id="searchbox_satuan" name="searchbox_satuan" class="form-control form-control-md float-right" placeholder="Search Data Satuan Obat">
+                                            <input type="text" id="searchbox_jaminan" name="searchbox_jaminan" class="form-control form-control-md float-right" placeholder="Search Data Jaminan">
                                             <div class="input-group-append mr-1">
                                                 <button type="submit" class="btn btn-default">
                                                     <i class="fas fa-search"></i>
                                                 </button>
                                             </div>
 
-                                            <button type="button" class="btn btn-default btn-md text-bold float-right mr-1" id="refresfSatuanBtn"><i class="fas fa-sync-alt text-primary mr-2"></i>Refresh</button>
-                                            <button onClick="copySatuanConfirm('{{ route('satuanobat.copypreset') }}')" type="button" class="btn btn-default btn-md text-bold float-right mr-1" id="copySatuanBtn"><i class="fas fa-copy text-danger mr-2"></i>Copy Preset</button>
-                                            <button onclick="addFormSatuan('{{ route('satuanobat.store') }}')" type="button" class="btn btn-default btn-md text-bold float-right" id="addSatuanBtn"><i class="fas fa-plus text-success mr-2"></i>Tambah</button>
+                                            <button type="button" class="btn btn-default btn-md text-bold float-right mr-1" id="refresfJaminanBtn"><i class="fas fa-sync-alt text-primary mr-2"></i>Refresh</button>
+                                            <button onClick="copyJaminanConfirm('{{ route('jaminan.copypreset') }}')" type="button" class="btn btn-default btn-md text-bold float-right mr-1" id="copyGolobatBtn"><i class="fas fa-copy text-danger mr-2"></i>Copy Preset</button>
+                                            <button onclick="addFormJaminan('{{ route('jaminan.store') }}')" type="button" class="btn btn-default btn-md text-bold float-right" id="addJaminanBtn"><i class="fas fa-plus text-success mr-2"></i>Tambah</button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-body table-responsive p-1 mb-0">
-                                    <table id="table-satuan" class="table table-bordered table-xs table-hover text-sm" style="width:100%">
+                                    <table id="table-jaminan" class="table table-bordered table-xs table-hover text-sm" style="width:100%">
                                         <thead>
                                             <tr class="text-center bg-gradient-info">
                                                 <th width="2%">No</th>
                                                 <th width="10%">Action</th>
-                                                <th width="78%">Nama Satuan</th>
+                                                <th width="30%">Nama Jaminan</th>
+                                                <th width="48%">Keterangan</th>
                                                 <th width="10%">Status</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="body-table-satuan">
+                                        <tbody id="body-table-jaminan">
                                         </tbody>
                                     </table>
                                 </div>
@@ -70,7 +71,7 @@
             </div>
         </div>
     </div>
-@includeIf('master.satuan-obat.form')
+@includeIf('pendaftaran-klinik.jaminan.form')
 
 @stop
 @section('footer')
@@ -88,8 +89,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js" integrity="sha512-dTu0vJs5ndrd3kPwnYixvOCsvef5SGYW/zSSK4bcjRBcZHzqThq7pt7PmCv55yb8iBvni0TSeIDV8RYKjZL36A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-var idSatuan = "";
-var tableSatuan = null;
+var idJaminan = "";
+var tableJaminan = null;
 var varOpenedTab = 0;
 var strProses = '';
 var cb_status = document.getElementById('cb_status');
@@ -124,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (varOpenedTab === 0) {
             if (event.ctrlKey && event.altKey && event.key === 'n') {
                 event.preventDefault();
-                document.getElementById('addSatuanBtn').click();
+                document.getElementById('addJaminanBtn').click();
                 document.getElementById('nama').focus();
                 return false;
             }
@@ -132,9 +133,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-$('#searchbox_satuan').keyup(function() {
-    tableSatuan.search($(this).val()).draw();
-    tableSatuan.columns.adjust().draw();
+$('#searchbox_jaminan').keyup(function() {
+    tableJaminan.search($(this).val()).draw();
+    tableJaminan.columns.adjust().draw();
 });
 
 $(function() {
@@ -149,7 +150,7 @@ $(function() {
         }
     });
 
-    tableSatuan = $('#table-satuan').DataTable({
+    tableJaminan = $('#table-jaminan').DataTable({
         processing: true,
         serverSide: false,
         dom: 'rt<"row text-xs p-1"<"float-right"p>><"clear">',
@@ -157,11 +158,12 @@ $(function() {
         columnDefs: [
             { width: '2%', targets: 0 },
             { width: '10%', targets: 1 },
-            { width: '78%', targets: 2 },
+            { width: '30%', targets: 2 },
+            { width: '48%', targets: 3 },
             { width: '10%', targets: 3 },
         ],
         ajax: {
-            url: "{{ route('satuanobat.data') }}",
+            url: "{{ route('jaminan.data') }}",
             dataSrc: "data",
         },
         columns: [
@@ -181,12 +183,17 @@ $(function() {
             }, 
             {
                 data: 'nama',
-                name: 'satuan_obat.nama',
+                name: 'jaminan.nama',
+                class: 'pl-2 pr-2',
+            },
+            {
+                data: 'keterangan',
+                name: 'jaminan.keterangan',
                 class: 'pl-2 pr-2',
             },
             {
                 data: 'status_aktif',
-                name: 'satuan_obat.status_aktif',
+                name: 'jaminan.status_aktif',
                 className: 'text-center',
                 render: function(data, type, full, meta) {
                     if (data == 1) {
@@ -199,36 +206,36 @@ $(function() {
         ]
     });
 
-    tableSatuan.columns.adjust().draw();
+    tableJaminan.columns.adjust().draw();
 
-    $('#addDataSatuan').validator().on('submit', function(e) {
+    $('#addDataJaminan').validator().on('submit', function(e) {
         e.preventDefault();
-        $('#saveSatuan').prop('disabled', true).html('<span class="spinner-grow spinner-grow-sm mr-3" role="status" aria-hidden="true"></span>Sending...');
-        $('#resetSatuan').prop('disabled', true);
-        var formData = new FormData($('#addDataSatuan form')[0]);
+        $('#saveJaminan').prop('disabled', true).html('<span class="spinner-grow spinner-grow-sm mr-3" role="status" aria-hidden="true"></span>Sending...');
+        $('#resetJaminan').prop('disabled', true);
+        var formData = new FormData($('#addDataJaminan form')[0]);
 
         $.ajax({
-            url: $('#addDataSatuan form').attr('action'),
+            url: $('#addDataJaminan form').attr('action'),
             method: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             success: function(response) {
-                $('#saveSatuan').prop('disabled', false).html('<i class="fas fa-save text-success mr-2"></i>Simpan Data');
-                $('#resetSatuan').prop('disabled', false);
+                $('#saveJaminan').prop('disabled', false).html('<i class="fas fa-save text-success mr-2"></i>Simpan Data');
+                $('#resetJaminan').prop('disabled', false);
                 toastr["success"](response.success, "Data Tersimpan");
-                $('#addDataSatuan').modal('hide');
-                tableSatuan.ajax.reload();
-                tableSatuan.columns.adjust().draw();
+                $('#addDataJaminan').modal('hide');
+                tableJaminan.ajax.reload();
+                tableJaminan.columns.adjust().draw();
             },
             error: function(error) {
-                $('#saveSatuan').prop('disabled', false).html('<i class="fas fa-save text-success mr-2"></i>Simpan Data');
-                $('#resetSatuan').prop('disabled', false);
+                $('#saveJaminan').prop('disabled', false).html('<i class="fas fa-save text-success mr-2"></i>Simpan Data');
+                $('#resetJaminan').prop('disabled', false);
                 var errorMessage = error.responseJSON ? error.responseJSON.error : 'Terjadi kesalahan saat menyimpan data';
                 toastr["error"](errorMessage, "Data Gagal Disimpan");
-                $('#addDataSatuan').addClass('shake'); 
+                $('#addDataJaminan').addClass('shake'); 
                     setTimeout(function() {
-                        $('#addDataSatuan').removeClass('shake'); 
+                        $('#addDataJaminan').removeClass('shake'); 
                     }, 500);
             }
         });
@@ -238,16 +245,16 @@ $(function() {
 
 // FORM MODAL TIPE LOKASI POLI
 
-function addFormSatuan(url) {
-    $("#addDataSatuan").modal({ 
+function addFormJaminan(url) {
+    $("#addDataJaminan").modal({ 
         backdrop: "static", 
         keyboard: false, 
     }); 
-    $('#addDataSatuan .modal-title').text('Tambah Satuan Obat');
-    $('#addDataSatuan form')[0].reset();
-    $('#addDataSatuan form').attr('action', url);
-    $('#addDataSatuan [name=_method]').val('post');
-    $('#addDataSatuan [name=_enctype]').val('multipart/form-data');
+    $('#addDataJaminan .modal-title').text('Tambah Jaminan');
+    $('#addDataJaminan form')[0].reset();
+    $('#addDataJaminan form').attr('action', url);
+    $('#addDataJaminan [name=_method]').val('post');
+    $('#addDataJaminan [name=_enctype]').val('multipart/form-data');
     cb_status.checked = true;
     status_aktif.value = 1;
     statusLabel.textContent = 'AKTIF';
@@ -255,23 +262,24 @@ function addFormSatuan(url) {
     console.log(strProses);
 }
 
-function editFormSatuan(url) {
-    $("#addDataSatuan").modal({ 
+function editFormJaminan(url) {
+    $("#addDataJaminan").modal({ 
         backdrop: "static", 
         keyboard: false, 
     }); 
-    $('#addDataSatuan .modal-title').text('Edit Satuan Obat');
-    $('#addDataSatuan form')[0].reset();
-    $('#addDataSatuan form').attr('action', url);
-    $('#addDataSatuan [name=_method]').val('put');
-    $('#addDataSatuan [name=_enctype]').val('multipart/form-data');
+    $('#addDataJaminan .modal-title').text('Edit Jaminan');
+    $('#addDataJaminan form')[0].reset();
+    $('#addDataJaminan form').attr('action', url);
+    $('#addDataJaminan [name=_method]').val('put');
+    $('#addDataJaminan [name=_enctype]').val('multipart/form-data');
     strProses = 'edit';
     console.log(strProses);
 
     $.get(url)
         .done((response) => {
-            idSatuan = response.id;
-            $('#addDataSatuan [name=nama]').val(response.nama);
+            idJaminan = response.id;
+            $('#addDataJaminan [name=nama]').val(response.nama);
+            $('#addDataJaminan [name=keterangan]').val(response.keterangan);
             if(response.status_aktif == 1){
                 cb_status.checked = true;
                 status_aktif.value = 1;
@@ -288,7 +296,7 @@ function editFormSatuan(url) {
         });
 }
 
-function deleteDataSatuan(url) {
+function deleteDataJaminan(url) {
     Swal.fire({
         title: 'Konfirmasi Hapus',
         text: 'Apakah Anda yakin ingin menghapus data ini?',
@@ -306,8 +314,8 @@ function deleteDataSatuan(url) {
                 },
                 success: function(response) {
                     Swal.fire('Berhasil', 'Data berhasil dihapus', 'success');
-                    tableSatuan.ajax.reload();
-                    tableSatuan.columns.adjust().draw();
+                    tableJaminan.ajax.reload();
+                    tableJaminan.columns.adjust().draw();
                 },
                 error: function(xhr, status, error) {
                     var errorMessage = xhr.status + ': ' + xhr.statusText;
@@ -321,10 +329,10 @@ function deleteDataSatuan(url) {
     });
 }
 
-function copySatuanConfirm(url) {
+function copyJaminanConfirm(url) {
     Swal.fire({
         title: 'Konfirmasi Copy Data Preset',
-        text: 'Apakah Anda yakin untuk menambahkan data Satuan Obat dari data Preset?',
+        text: 'Apakah Anda yakin untuk menambahkan data Jaminan dari data Preset?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Ya, Tambahkan',
@@ -336,8 +344,8 @@ function copySatuanConfirm(url) {
                 '_method': 'post'
             })
             .done((response) => {
-                Swal.fire('Berhasil', 'Data Preset berhasil dicopy ke dalam data Satuan Obat', 'success');
-                tableSatuan.ajax.reload();
+                Swal.fire('Berhasil', 'Data Preset berhasil dicopy ke dalam data Jaminan', 'success');
+                tableJaminan.ajax.reload();
             })
             .fail((errors) => {
                 Swal.fire('Error', 'Tidak dapat menambahkan data dari Preset', 'error');

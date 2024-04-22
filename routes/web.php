@@ -21,6 +21,7 @@ use App\Http\Controllers\LokasiObatController;
 use App\Http\Controllers\SatuanObatController;
 use App\Http\Controllers\DiagnosaController;
 use App\Http\Controllers\TindakanController;
+use App\Http\Controllers\JaminanController;
 use App\Http\Controllers\MailNotifController;
 use App\Mail;
 
@@ -193,6 +194,18 @@ Route::get('readSipaFiles/{id?}', [KlinikController::class, 'readSipaFiles'])->n
     Route::get('dashboard/master/satuan-obat/{id}', [SatuanObatController::class, 'show'])->name('satuanobat.show');
     Route::delete('dashboard/master/satuan-obat/{id}', [SatuanObatController::class, 'destroy'])->name('satuanobat.destroy');
     Route::post('dashboard/master/satuan-obat/copy-preset', [SatuanObatController::class, 'copyPreset'])->name('satuanobat.copypreset');
+
+//ROUTES UNTUK PENDAFTARAM KLINIK
+    //ROUTES UNTUK DATA JAMINAN
+    Route::get('dashboard/pendaftaran-klinik/jaminan', [JaminanController::class, 'index'])->name('jaminan.index');
+    Route::get('dashboard/pendaftaran-klinik/jaminan/data', [JaminanController::class, 'data'])->name('jaminan.data');
+    Route::get('dashboard/pendaftaran-klinik/jaminan/detail', [JaminanController::class, 'detail'])->name('jaminan.detail');
+    Route::post('dashboard/pendaftaran-klinik/jaminan/store', [JaminanController::class, 'store'])->name('jaminan.store');
+    Route::get('dashboard/pendaftaran-klinik/jaminan/{id}/edit', [JaminanController::class, 'edit'])->name('jaminan.edit');
+    Route::put('dashboard/pendaftaran-klinik/jaminan/{id}', [JaminanController::class, 'update'])->name('jaminan.update');
+    Route::get('dashboard/pendaftaran-klinik/jaminan/{id}', [JaminanController::class, 'show'])->name('jaminan.show');
+    Route::delete('dashboard/pendaftaran-klinik/jaminan/{id}', [JaminanController::class, 'destroy'])->name('jaminan.destroy');
+    Route::post('dashboard/pendaftaran-klinik/jaminan/copy-preset', [JaminanController::class, 'copyPreset'])->name('jaminan.copypreset');
 
 //ROUTES UNTUK PELAYANAN KLINIK
     //ROUTES UNTUK DATA DIAGNOSA

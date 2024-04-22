@@ -471,7 +471,7 @@ return [
                     'text'  => 'Data Jaminan',
                     'icon'  => 'fas fa-fw fa-umbrella ml-1 mr-2',
                     'icon_color'  => 'primary',
-                    'url'   => '#',
+                    'url'   => 'dashboard/pendaftaran-klinik/jaminan',
                     'shift' => 'ml-2',
                     'classes' => 'text-sm',
                 ],
