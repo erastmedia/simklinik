@@ -38,6 +38,7 @@ Auth::routes();
 Auth::routes(['verify' => true]);
 
 Route::get('/get-access-token', [BridgingSatuSehatController::class, 'getAccessToken']);
+Route::get('/get-pasien-by-name-birthdate-nik-gender', [BridgingSatuSehatController::class, 'getPasienByNameGenderBirthdate']);
 
 // Route::get('/{username}', [MemberController::class, 'index'])->name('memberarea');
 // Route::get('/{username}', 'MemberController@index');
