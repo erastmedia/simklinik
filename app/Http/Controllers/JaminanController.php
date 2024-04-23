@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Jaminan;
-use Illuminatew\Validation\Rule;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
