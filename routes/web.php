@@ -6,6 +6,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KlinikController;
+use App\Http\Controllers\BridgingSatuSehatController;
 use App\Http\Controllers\PoliController;
 use App\Http\Controllers\TipeLokasiPoliController;
 use App\Http\Controllers\SpesialisasiDokterController;
@@ -36,6 +37,8 @@ Route::get('/', function () {
 Auth::routes();
 Auth::routes(['verify' => true]);
 
+Route::get('/get-access-token', [BridgingSatuSehatController::class, 'getAccessToken']);
+
 // Route::get('/{username}', [MemberController::class, 'index'])->name('memberarea');
 // Route::get('/{username}', 'MemberController@index');
 
@@ -65,6 +68,10 @@ Route::get('readLogoFiles/{id?}', [KlinikController::class, 'readLogoFiles'])->n
 Route::get('readRegFiles/{id?}', [KlinikController::class, 'readRegFiles'])->name('readRegFiles');
 Route::get('readStraFiles/{id?}', [KlinikController::class, 'readStraFiles'])->name('readStraFiles');
 Route::get('readSipaFiles/{id?}', [KlinikController::class, 'readSipaFiles'])->name('readSipaFiles');
+
+//ROUTES UNTUK INTEGRASI SATU SEHAT
+Route::get('dashboard/system/satu-sehat', [BridgingSatuSehatController::class, 'index'])->name('integrasi-satu-sehat');
+Route::post('/update-satu-sehat', [BridgingSatuSehatController::class, 'updateBridging'])->name('satusehat.update');
 
 //ROUTES UNTUK MASTER
     //ROUTES UNTUK DATA POLI

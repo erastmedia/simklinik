@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\Klinik;
+use App\Models\BridgingSatuSehat;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -101,6 +102,13 @@ class RegisterController extends Controller
         ]);
         
         $newlyInsertedId = $klinik->id;
+
+        BridgingSatuSehat::create([
+            'id_klinik' => $newlyInsertedId,
+            'organization_id' => '', 
+            'client_key' => '', 
+            'secret_key' => '', 
+        ]);
 
         return User::create([
             'name' => $data['name'],
