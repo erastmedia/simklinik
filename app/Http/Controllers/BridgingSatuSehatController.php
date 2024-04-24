@@ -66,9 +66,9 @@ class BridgingSatuSehatController extends Controller
     {
         $accessToken = Session::get('access_token');
         $base_api_url = 'https://api-satusehat-stg.dto.kemkes.go.id/fhir-r4/v1/';
-        $patient_name = 'Erastomo';
-        $patient_birthdate = '1982-02-28';
-        $patient_nik = '3303082802820004';
+        $patient_name = 'patient 1';
+        $patient_birthdate = '1980-12-03';
+        $patient_nik = '9271060312000001';
         $patient_gender = 'male';
         try {
             $response = Http::withToken($accessToken)->get($base_api_url . 'Patient?name=' . $patient_name . '&birthdate=' . $patient_birthdate . '&nik=' . $patient_nik . '&gender=' . $patient_gender);
@@ -84,6 +84,7 @@ class BridgingSatuSehatController extends Controller
             $name = $patientData['name'][0]['text'];
             $citizenshipStatus = $patientData['extension'][0]['valueCode'];
             $language = $patientData['communication'][0]['language']['text'];
+            $city = $patientData['address'][0]['city'];
             
             // Return the extracted data
             return response()->json([
@@ -92,8 +93,10 @@ class BridgingSatuSehatController extends Controller
                 'gender' => $gender,
                 'name' => $name,
                 'citizenship_status' => $citizenshipStatus,
-                'language' => $language
+                'language' => $language,
+                'city' => $city
             ]);
+            // return $responseData;
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => [$th->getMessage()]

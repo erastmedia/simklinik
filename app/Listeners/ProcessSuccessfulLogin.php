@@ -39,11 +39,15 @@ class ProcessSuccessfulLogin
         $satusehat = BridgingSatuSehat::where('id_klinik', $idKlinik)->first();
         $client_id = $satusehat->client_key;
         $client_secret = $satusehat->secret_key;
-        $response = Http::asForm()->post('https://api-satusehat-stg.dto.kemkes.go.id/oauth2/v1/accesstoken?grant_type=client_credentials', [
-            'client_id' => $client_id,
-            'client_secret' => $client_secret,
-        ]);
-        $accessToken = $response->json()['access_token'];
-        Session::put('access_token', $accessToken);
+        if($client_id){
+            $response = Http::asForm()->post('https://api-satusehat-stg.dto.kemkes.go.id/oauth2/v1/accesstoken?grant_type=client_credentials', [
+                'client_id' => $client_id,
+                'client_secret' => $client_secret,
+            ]);
+            $accessToken = $response->json()['access_token'];
+            Session::put('access_token', $accessToken);
+        } else {
+            Session::put('access_token', '');
+        }
     }
 }
