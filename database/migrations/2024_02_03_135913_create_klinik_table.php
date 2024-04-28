@@ -20,15 +20,10 @@ class CreateKlinikTable extends Migration
             $table->string('penanggung_jawab', 100)->default('');
             $table->string('penanggung_jawab_lab', 100)->default('');
             $table->unsignedBigInteger('id_tipe')->default(0);
-            // $table->foreign('id_tipe')->references('id')->on('tipe_klinik')->onDelete('cascade');
             $table->unsignedBigInteger('prov_id')->default(0);
-            // $table->foreign('prov_id')->references('prov_id')->on('provinces')->onDelete('cascade');
             $table->unsignedBigInteger('city_id')->default(0);
-            // $table->foreign('city_id')->references('city_id')->on('cities')->onDelete('cascade');
             $table->unsignedBigInteger('dis_id')->default(0);
-            // $table->foreign('dis_id')->references('dis_id')->on('districts')->onDelete('cascade');
             $table->unsignedBigInteger('subdis_id')->default(0);
-            // $table->foreign('subdis_id')->references('subdis_id')->on('subdistricts')->onDelete('cascade');
             $table->string('kode_pos', 6)->default('');
             $table->string('rt', 3)->default('');
             $table->string('rw', 3)->default('');
