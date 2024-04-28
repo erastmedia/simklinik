@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'title' => 'SISTEM INFORMASI MANAJEMEN KLINIK',
+    'title' => 'SISTEM INFORMASI MANAJEMEN FASKES',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -66,9 +66,8 @@ return [
     */
 
     'logo' => '
-        <span class="text-primary text-bold text-lg">S I M</span>
-        <span class="text-lg text-bold">&nbsp;</span>
-        <span class="badge badge-danger text-lg">K l i n i k</span>',
+        <span class="text-primary text-bold text-lg mr-1">S I M</span>
+        <span class="badge badge-danger text-lg">S e h a t</span>',
     // 'logo_img' => asset('img/letter-s.png'),
     'logo_img' => 'img/letter-s.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
@@ -174,7 +173,7 @@ return [
     */
 
     'classes_auth_card' => 'card-outline card-primary',
-    'classes_auth_header' => '',
+    'classes_auth_header' => 'text-xs',
     'classes_auth_body' => '',
     'classes_auth_footer' => '',
     'classes_auth_icon' => '',

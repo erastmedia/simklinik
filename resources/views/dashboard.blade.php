@@ -21,6 +21,15 @@
     
 @stop
 
+@section('footer')
+    <footer class="main-footer text-xs">
+        <div class="float-right d-block d-xs-block">
+            <b>Version</b> 1.0.0
+        </div>
+        <strong>Copyright &copy; 2023 erastmedia.</strong> All rights reserved.
+    </footer>
+@stop
+
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
 

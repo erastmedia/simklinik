@@ -30,43 +30,10 @@ button.bg-darkpeach:focus {
     background-color: #b17684 !important;
 }
 
-/* .main-sidebar {
-    width: 280px;
+.login-page,
+.register-page {
+    background-color: #343a40 !important;
 }
-
-.sidebar {
-    width: 280;
-} */
-
-/* .sidebar-collapse .main-sidebar,
-.sidebar-collapse .main-sidebar::before {
-    margin-left: -280px;
-}
-
-.sidebar-mini .main-sidebar .nav-link {
-    width: calc(280px - 0.3rem * 2);
-    transition: width ease-in-out 0.3s;
-}
-
-.sidebar-mini
-    .main-sidebar
-    .nav-child-indent.nav-compact
-    .nav-treeview
-    .nav-link {
-    width: calc(280px - 0.3rem * 2 - 0.5rem);
-} */
-
-/* @media (min-width: 768px) {
-    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav)
-        .content-wrapper,
-    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav)
-        .main-footer,
-    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav)
-        .main-header {
-        transition: margin-left 0.3s ease-in-out;
-        margin-left: 280px;
-    }
-} */
 
 .content-header {
     padding: 15px 0.5rem 0.3rem !important;
